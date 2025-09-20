@@ -21,8 +21,8 @@ def load_edge_list(path: str, directed: bool = False) -> Graph:
         g[k] = sorted(set(g[k]))
     return dict(g)
 
-# 1) 재귀 DFS (슬라이드 왼쪽)
-def dfs_recursive(graph: Graph, u) -> List:
+# 1) 재귀 DFS
+def dfs1(u) -> List:
     visited: Set = set()
     order: List = []
 
@@ -37,10 +37,10 @@ def dfs_recursive(graph: Graph, u) -> List:
     return order
 
 
-# 2) 백트래킹형 반복 DFS (슬라이드 가운데)
+# 2) 백트래킹형 반복 DFS
 #  - "갈 수 있으면 현재 정점을 push하고 다음 정점으로 이동,
 #    갈 수 없으면 pop해서 되돌아감" 의 흐름을 그대로 살림.
-def dfs_iter_backtrack(graph, start):
+def dfs2(start):
     visited = set()
     order = []
     stack = []
@@ -64,13 +64,13 @@ def dfs_iter_backtrack(graph, start):
     return order
 
 
-# 3) 전형적인 스택 기반 DFS (슬라이드 오른쪽)
+# 3) 전형적인 스택 기반 DFS
 #  - 스택에서 pop → 이미 방문이면 continue
 #  - 아니면 방문 처리 후, 이웃을 push
-def dfs_iter_stack(graph, s):
+def dfs3( start):
     visited = set()
     order = []
-    stack = [s]
+    stack = [start]
 
     while stack:
         u = stack.pop()
@@ -83,21 +83,15 @@ def dfs_iter_stack(graph, s):
             if v not in visited:
                 stack.append(v)
     return order
-# 사용 예시
-if __name__ == "__main__":
-    graph = load_edge_list("searchgraph.txt", directed=False)
-    print(f"노드 수: {len(graph)}")
-    # 실제 전체 노드 수는 고립 노드가 없다는 가정 하에 len(graph)와 동일
-    # 몇 개 이웃만 확인
-    sample_keys = list(graph.keys())[:5]
-    for k in sample_keys:
-        print(k, "->", graph[k])
 
-# 예: 시작 정점을 48로
-print('\n\n')
-print('재귀 dfs: \n',dfs_recursive(graph, 1))
-print('\n')
-print('백트래킹형 반복 dfs: \n',dfs_iter_backtrack(graph, 1))
-print('\n')
-print('스택 기반 dfs: \n',dfs_iter_stack(graph, 1))
+
+if __name__ == "__main__":
+    global graph
+    graph = load_edge_list("searchgraph.txt", directed=False)
+
+    print('재귀 dfs: \n',dfs1(1))
+    print('\n')
+    print('백트래킹형 반복 dfs: \n',dfs2(1))
+    print('\n')
+    print('스택 기반 dfs: \n',dfs3(1))
 
